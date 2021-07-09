@@ -80,14 +80,18 @@
 #ifndef VIPS_VIPS_H
 #define VIPS_VIPS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /*__cplusplus*/
-
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <gmodule.h>
 #include <glib-object.h>
+
+/* Needed for VipsGInputStream.
+ */
+#include <gio/gio.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif /*__cplusplus*/
 
 /* If we're being parsed by SWIG, remove gcc attributes.
  */
@@ -113,6 +117,8 @@ extern "C" {
 #include <vips/object.h>
 #include <vips/type.h>
 #include <vips/gate.h>
+#include <vips/connection.h>
+#include <vips/sbuf.h>
 
 #include <vips/version.h>
 #include <vips/rect.h>
@@ -147,7 +153,6 @@ extern "C" {
 #include <vips/draw.h>
 #include <vips/create.h>
 #include <vips/video.h>
-#include <vips/cimg_funcs.h>
 
 /* We can't use _ here since this will be compiled by our clients and they may
  * not have _().
@@ -165,8 +170,8 @@ extern "C" {
 		vips_init( ARGV0 ))
 
 int vips_init( const char *argv0 );
-
 const char *vips_get_argv0( void );
+const char *vips_get_prgname( void );
 void vips_shutdown( void );
 void vips_thread_shutdown( void );
 

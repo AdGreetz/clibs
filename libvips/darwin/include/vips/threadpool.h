@@ -5,6 +5,8 @@
  * 17/3/10
  * 	- from threadgroup
  * 	- rework with a simpler distributed work allocation model
+ * 02/02/20 kleisauke
+ * 	- reuse threads by using GLib's threadpool
  */
 
 /*

@@ -253,9 +253,13 @@ GLIB_AVAILABLE_IN_ALL
 gchar*                g_strescape      (const gchar *source,
 					const gchar *exceptions) G_GNUC_MALLOC;
 
-GLIB_AVAILABLE_IN_ALL
-gpointer              g_memdup	       (gconstpointer mem,
-					guint	       byte_size) G_GNUC_ALLOC_SIZE(2);
+GLIB_DEPRECATED_IN_2_68_FOR (g_memdup2)
+gpointer              g_memdup         (gconstpointer mem,
+                                        guint         byte_size) G_GNUC_ALLOC_SIZE(2);
+
+GLIB_AVAILABLE_IN_2_68
+gpointer              g_memdup2        (gconstpointer mem,
+                                        gsize         byte_size) G_GNUC_ALLOC_SIZE(2);
 
 /* NULL terminated string arrays.
  * g_strsplit(), g_strsplit_set() split up string into max_tokens tokens
@@ -306,6 +310,10 @@ gboolean                g_str_match_string                              (const g
 GLIB_AVAILABLE_IN_2_44
 gboolean              g_strv_contains  (const gchar * const *strv,
                                         const gchar         *str);
+
+GLIB_AVAILABLE_IN_2_60
+gboolean              g_strv_equal     (const gchar * const *strv1,
+                                        const gchar * const *strv2);
 
 /* Convenience ASCII string to number API */
 

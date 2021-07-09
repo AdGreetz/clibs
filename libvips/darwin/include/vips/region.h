@@ -60,6 +60,9 @@ extern "C" {
  * @VIPS_REGION_SHRINK_MEAN: use the average
  * @VIPS_REGION_SHRINK_MEDIAN: use the median
  * @VIPS_REGION_SHRINK_MODE: use the mode
+ * @VIPS_REGION_SHRINK_MAX: use the maximum
+ * @VIPS_REGION_SHRINK_MIN: use the minimum
+ * @VIPS_REGION_SHRINK_NEAREST: use the top-left pixel
  *
  * How to calculate the output pixels when shrinking a 2x2 region.
  */
@@ -67,12 +70,17 @@ typedef enum {
 	VIPS_REGION_SHRINK_MEAN,
 	VIPS_REGION_SHRINK_MEDIAN,
 	VIPS_REGION_SHRINK_MODE,
+	VIPS_REGION_SHRINK_MAX,
+	VIPS_REGION_SHRINK_MIN,
+	VIPS_REGION_SHRINK_NEAREST,
 	VIPS_REGION_SHRINK_LAST
 } VipsRegionShrink;
 
 /* Sub-area of image.
+ *
+ * Matching typedef in basic.h.
  */
-typedef struct _VipsRegion {
+struct _VipsRegion {
 	VipsObject parent_object;
 
 	/*< public >*/
@@ -106,7 +114,7 @@ typedef struct _VipsRegion {
 	 * dropped.
 	 */
 	gboolean invalid;	
-} VipsRegion;
+};
 
 typedef struct _VipsRegionClass {
 	VipsObjectClass parent_class;
@@ -141,6 +149,11 @@ int vips_region_prepare( VipsRegion *reg, const VipsRect *r );
 int vips_region_prepare_to( VipsRegion *reg,
 	VipsRegion *dest, const VipsRect *r, int x, int y );
 
+VipsPel *vips_region_fetch( VipsRegion *region, 
+	int left, int top, int width, int height, size_t *len );
+int vips_region_width( VipsRegion *region );
+int vips_region_height( VipsRegion *region );
+
 void vips_region_invalidate( VipsRegion *reg );
 
 /* Use this to count pixels passing through key points. Handy for spotting bad
@@ -152,18 +165,16 @@ void vips_region_invalidate( VipsRegion *reg );
 #define VIPS_COUNT_PIXELS( R, N ) 
 #endif /*DEBUG_LEAK*/
 
-/* Macros on VipsRegion.
- *	VIPS_REGION_LSKIP()		add to move down line
- *	VIPS_REGION_N_ELEMENTS()	number of elements across region
- *	VIPS_REGION_SIZEOF_LINE()	sizeof width of region
- *	VIPS_REGION_ADDR()		address of pixel in region
- */
 #define VIPS_REGION_LSKIP( R ) \
 	((size_t)((R)->bpl))
 #define VIPS_REGION_N_ELEMENTS( R ) \
 	((size_t)((R)->valid.width * (R)->im->Bands))
+#define VIPS_REGION_SIZEOF_ELEMENT( R ) \
+	(VIPS_IMAGE_SIZEOF_ELEMENT( (R)->im ))
+#define VIPS_REGION_SIZEOF_PEL( R ) \
+	(VIPS_IMAGE_SIZEOF_PEL( (R)->im ))
 #define VIPS_REGION_SIZEOF_LINE( R ) \
-	((size_t)((R)->valid.width * VIPS_IMAGE_SIZEOF_PEL( (R)->im) ))
+	((size_t)((R)->valid.width * VIPS_REGION_SIZEOF_PEL( R )))
 
 /* If DEBUG is defined, add bounds checking.
  */
@@ -171,7 +182,7 @@ void vips_region_invalidate( VipsRegion *reg );
 #define VIPS_REGION_ADDR( R, X, Y ) \
 	( (vips_rect_includespoint( &(R)->valid, (X), (Y) ))? \
 	  ((R)->data + ((Y) - (R)->valid.top) * VIPS_REGION_LSKIP(R) + \
-	  ((X) - (R)->valid.left) * VIPS_IMAGE_SIZEOF_PEL((R)->im)): \
+	  ((X) - (R)->valid.left) * VIPS_REGION_SIZEOF_PEL( R )): \
 	  (fprintf( stderr, \
 		"VIPS_REGION_ADDR: point out of bounds, " \
 		"file \"%s\", line %d\n" \
@@ -189,7 +200,7 @@ void vips_region_invalidate( VipsRegion *reg );
 #define VIPS_REGION_ADDR( R, X, Y ) \
 	((R)->data + \
 	((Y)-(R)->valid.top) * VIPS_REGION_LSKIP( R ) + \
-	((X)-(R)->valid.left) * VIPS_IMAGE_SIZEOF_PEL( (R)->im ))
+	((X)-(R)->valid.left) * VIPS_REGION_SIZEOF_PEL( R ))
 #endif /*DEBUG*/
 
 #define VIPS_REGION_ADDR_TOPLEFT( R ) ((R)->data)

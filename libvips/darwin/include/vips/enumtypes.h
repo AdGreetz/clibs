@@ -58,6 +58,10 @@ GType vips_foreign_flags_get_type (void) G_GNUC_CONST;
 #define VIPS_TYPE_FOREIGN_FLAGS (vips_foreign_flags_get_type())
 GType vips_saveable_get_type (void) G_GNUC_CONST;
 #define VIPS_TYPE_SAVEABLE (vips_saveable_get_type())
+GType vips_foreign_subsample_get_type (void) G_GNUC_CONST;
+#define VIPS_TYPE_FOREIGN_SUBSAMPLE (vips_foreign_subsample_get_type())
+GType vips_foreign_jpeg_subsample_get_type (void) G_GNUC_CONST;
+#define VIPS_TYPE_FOREIGN_JPEG_SUBSAMPLE (vips_foreign_jpeg_subsample_get_type())
 GType vips_foreign_webp_preset_get_type (void) G_GNUC_CONST;
 #define VIPS_TYPE_FOREIGN_WEBP_PRESET (vips_foreign_webp_preset_get_type())
 GType vips_foreign_tiff_compression_get_type (void) G_GNUC_CONST;
@@ -74,6 +78,8 @@ GType vips_foreign_dz_depth_get_type (void) G_GNUC_CONST;
 #define VIPS_TYPE_FOREIGN_DZ_DEPTH (vips_foreign_dz_depth_get_type())
 GType vips_foreign_dz_container_get_type (void) G_GNUC_CONST;
 #define VIPS_TYPE_FOREIGN_DZ_CONTAINER (vips_foreign_dz_container_get_type())
+GType vips_foreign_heif_compression_get_type (void) G_GNUC_CONST;
+#define VIPS_TYPE_FOREIGN_HEIF_COMPRESSION (vips_foreign_heif_compression_get_type())
 /* enumerations from "../../../libvips/include/vips/image.h" */
 GType vips_demand_style_get_type (void) G_GNUC_CONST;
 #define VIPS_TYPE_DEMAND_STYLE (vips_demand_style_get_type())
